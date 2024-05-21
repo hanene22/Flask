@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Generation with GAN</title>
+    <script>
+        function loadModel() {
+            document.getElementById("status").innerText = "Loading model, please wait...";
+            fetch('/load_model', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("status").innerText = data.status;
+            })
+            .catch(error => {
+                document.getElementById("status").innerText = "Error loading model.";
+                console.error('Error:', error);
+            });
+        }
+
+        function generateImage() {
+            document.getElementById("status").innerText = "Generating image, please wait...";
+            fetch('/generate_image', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("status").innerText = data.status;
+                document.getElementById("generated_image").src = data.image_url + '?' + new Date().getTime();
+            })
+            .catch(error => {
+                document.getElementById("status").innerText = "Error generating image.";
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Image Generation with GAN</h1>
+    <button onclick="loadModel()">Load Model</button>
+    <button onclick="generateImage()">Generate Image</button>
+    <p id="status"></p>
+    <h2>Generated Image</h2>
+    <img id="generated_image" src="" alt="Generated Image">
+</body>
+</html>
